@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data for M3S</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+       
+
+        .list-group-item-action {
+            margin-bottom: 10px; /* adds space between items */
+            border-radius: 0.25rem; /* rounded corners */
+            width:50%;
+            margin-left:275px;
+        }
+        .bg-custom-1 {
+            background-color: #6c757d; /* Bootstrap secondary color */
+
+        }
+        .bg-custom-2 {
+            background-color: #28a745; /* Bootstrap success color */
+        }
+        .bg-custom-3 {
+            background-color: #007bff; /* Bootstrap primary color */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-4 text-center">Data For Maintenance IT Application </h1>
+        <div class="list-group">
+            <a href="{{ url_for('eic_details') }}" class="list-group-item list-group-item-action bg-custom-1 text-white">Enter EIC Details</a>
+            <a href="{{ url_for('contract_form') }}" class="list-group-item list-group-item-action bg-custom-2 text-white">Enter Contract Details</a>
+            <a href="{{ url_for('manpower_form') }}" class="list-group-item list-group-item-action bg-custom-3 text-white">Enter Manpower Details</a>
+        </div>
+    </div>
+
+    
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .form-group {
+            width: 50%;
+            margin: auto;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3 style="text-align: center;"><a href="{{ url_for('home') }}"> Home </a></h3>
+        <h1 class="text-center my-4">Submit Details</h1>
+
+        
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-success">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="/submit" method="post">
+            <div class="form-group">
+                <label for="pbno"><strong>PB No:</strong></label>
+                <select class="form-control" id="pbno" name="pbno" required onchange="updateName()">
+                    <option value="">Select PB No</option>
+                    {% for pb in pbno_list %}
+                        <option value="{{ pb['pbno'] }}">{{ pb['pbno'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="name"><strong>Name:</strong></label>
+                <input type="text" class="form-control" id="name" name="name" readonly>
+            </div>
+            <div class="form-group">
+                <label for="area"><strong>Area:</strong></label>
+                <div class="checkbox-group">
+                    <div>
+                        <input type="checkbox" id="block-3a" name="area" value="Block-3A">
+                        <label for="block-3a">Block-3A</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="block-3" name="area" value="Block-3">
+                        <label for="block-3">Block-3</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="section"><strong>Section:</strong></label>
+                <div class="checkbox-group">
+                    <div>
+                        <input type="checkbox" id="me" name="section" value="ME">
+                        <label for="me">ME</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="el" name="section" value="EL">
+                        <label for="el">EL</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="ec" name="section" value="EC">
+                        <label for="ec">EC</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+        </form>
+
+        <h2 class="text-center my-4">EIC Details</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>PB No</th>
+                    <th>Name</th>
+                    <th>Area</th>
+                    <th>Section</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in eic_data %}
+                    <tr>
+                        <td>{{ row['pbno'] }}</td>
+                        <td>{{ row['name'] }}</td>
+                        <td>{% if not row['area'] %} {{ "" }} {% else %} {{ row["area"] }} {% endif %}</td>
+                        <td>{% if not row['section'] %} {{ "" }} {% else %} {{ row["section"] }} {% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function updateName() {
+            var pbno = document.getElementById('pbno').value;
+            var nameField = document.getElementById('name');
+            var pbnoList = {{ pbno_list|tojson }};
+            var name = '';
+
+            for (var i = 0; i < pbnoList.length; i++) {
+                if (pbnoList[i].pbno === pbno) {
+                    name = pbnoList[i].name;
+                    break;
+                }
+            }
+
+            nameField.value = name;
+        }
+    </script>
+</body>
+</html>

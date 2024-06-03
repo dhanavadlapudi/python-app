@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manpower Form</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-group {
+            width: 50%;
+            margin: auto;
+            display:flex;
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            flex: 1;
+            text-align: right;
+            margin-right: 1rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            flex: 2;
+        }
+
+        .checkbox-container {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        function fetchContractorName() {
+            var contractNo = document.getElementById("contract_no").value;
+            if (contractNo) {
+                fetch('/get_contractor_name/' + contractNo)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("contractor_name").value = data.contractor_name;
+                    });
+            } else {
+                document.getElementById("contractor_name").value = '';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h3 style="text-align: center;"><a href="{{ url_for('home') }}"> Home </a></h3>
+        <h1 class="text-center my-4">Submit Manpower Details</h1>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-success">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form action="/submit_manpower" method="post">
+            <div class="form-group">
+                <label for="punch_id">Punch ID:</label>
+                <input type="text" class="form-control" id="punch_id" name="punch_id" required>
+            </div>
+            <div class="form-group">
+                <label for="employee_id">Employee ID:</label>
+                <input type="text" class="form-control" id="employee_id" name="employee_id" required>
+            </div>
+            <div class="form-group">
+                <label for="name">Employee Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="contract_no">Contract No:</label>
+                <select class="form-control" id="contract_no" name="contract_no" onchange="fetchContractorName()" required>
+                    <option value="" disabled selected>Select Contract No</option>
+                    {% for contract in contract_data %}
+                        <option value="{{ contract['contract_no'] }}">{{ contract['contract_no'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="contractor_name">Contractor Name:</label>
+                <input type="text" class="form-control" id="contractor_name" name="contractor_name" readonly>
+            </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <select class="form-control" id="category" name="category" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="skilled">Skilled</option>
+                    <option value="semi-skilled">Semi-Skilled</option>
+                    <option value="unskilled">Unskilled</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="pf_no">PF No:</label>
+                <input type="text" class="form-control" id="pf_no" name="pf_no" required>
+            </div>
+            <div class="form-group">
+                <label for="esi_no">ESI No:</label>
+                <input type="text" class="form-control" id="esi_no" name="esi_no" required>
+            </div>
+            <div class="form-group">
+                <label for="aadhaar_no">Aadhaar No:</label>
+                <input type="text" class="form-control" id="aadhaar_no" name="aadhaar_no" required>
+            </div>
+            <div class="form-group">
+                <label for="bank_account_no">Bank Account No:</label>
+                <input type="text" class="form-control" id="bank_account_no" name="bank_account_no" required>
+            </div>
+            <div class="form-group">
+                <label for="date_of_joining">Date of Joining:</label>
+                <input type="date" class="form-control" id="date_of_joining" name="date_of_joining" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+
+        <h2 class="text-center my-4">Manpower Details</h2>
+        <form method="GET" action="/manpower">
+            <div class="form-group">
+                <label for="contract_filter">Filter by Contract No:</label>
+                <select class="form-control" id="contract_filter" name="contract_filter" onchange="this.form.submit()">
+                    <option value="">Select Contract No</option>
+                    {% for contract in contract_data %}
+                        <option value="{{ contract['contract_no'] }}" {% if contract['contract_no'] == selected_contract_no %}selected{% endif %}>{{ contract['contract_no'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+        {% if manpower_data %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Punch ID</th>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Contract No</th>
+                        <th>Contractor Name</th>
+                        <th>Category</th>
+                        <th>PF No</th>
+                        <th>ESI No</th>
+                        <th>Aadhaar No</th>
+                        <th>Bank Account No</th>
+                        <th>Date of Joining</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in manpower_data %}
+                        <tr>
+                            <td>{{ row['punch_id'] }}</td>
+                            <td>{{ row['employee_id'] }}</td>
+                            <td>{{ row['name'] }}</td>
+                            <td>{{ row['contract_no'] }}</td>
+                            <td>{{ row['contractor_name'] }}</td>
+                            <td>{{ row['category'] }}</td>
+                            <td>{{ row['pf_no'] }}</td>
+                            <td>{{ row['esi_no'] }}</td>
+                            <td>{{ row['aadhaar_no'] }}</td>
+                            <td>{{ row['bank_account_no'] }}</td>
+                            <td>{{ row['date_of_joining'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-center">No manpower details available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

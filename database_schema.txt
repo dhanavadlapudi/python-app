@@ -1,0 +1,32 @@
+CREATE TABLE eic_details (
+    pbno TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    area TEXT,
+    section TEXT
+);
+
+INSERT RECORDS - (9216,"madhu vadlapudi")
+
+
+CREATE TABLE contracts (
+    contract_no TEXT PRIMARY KEY,
+    start_date TEXT NOT NULL,
+    end_date TEXT NOT NULL,
+    contractor_name TEXT NOT NULL,
+    machine_list TEXT
+);
+
+
+CREATE TABLE manpower_1 (
+    punch_id INTEGER PRIMARY KEY,
+    employee_id TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    contract_no TEXT NOT NULL,
+    contractor_name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    pf_no TEXT NOT NULL UNIQUE,
+    esi_no TEXT NOT NULL UNIQUE,
+    aadhaar_no TEXT NOT NULL UNIQUE,
+    bank_account_no TEXT NOT NULL UNIQUE,
+    date_of_joining DATE NOT NULL
+);
